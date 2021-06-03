@@ -64,7 +64,8 @@ watch_next_dataset = spark.read \
     .option("header","true") \
     .option("multiline","true") \
     .csv(watch_next_dataset_path)
-watch_next_dataset = watch_next_dataset.dropDuplicates(["idx","watch_next_idx"]) ## Delete duplicated raws
+watch_next_dataset = watch_next_dataset.dropDuplicates(["idx","watch_next_idx"]) # Delete duplicated raws
+watch_next_dataset = watch_next_dataset.filter("url LIKE 'https://www.ted.com/talks/%'") # Get only talks url
 
 
 # CREATE THE AGGREGATE MODEL, ADD TAGS TO TEDX_DATASET
