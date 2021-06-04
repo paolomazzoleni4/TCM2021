@@ -73,12 +73,12 @@ tags_dataset_agg = tags_dataset.groupBy(col("idx").alias("idx_ref")) \
     .agg(collect_list("tag").alias("tags")) 
 tags_dataset_agg.printSchema()
 
+watch_next_dataset_agg = watch_next_dataset.join(tedx_dataset, tedx_dataset.idx == watch_next_dataset.watch_next_idx, "left") \
+    .select(watch_next_dataset["*"],tedx_dataset["title"])
 
-watch_next_dataset_agg = watch_next_dataset.groupBy(col("idx").alias("idx_ref")) \
-    .agg(collect_list(struct("watch_next_idx", "url")).alias("watch_next"))
-#.agg(collect_list("watch_next_idx").alias("watch_next"),collect_list("url").alias("url_next"))
+watch_next_dataset_agg = watch_next_dataset_agg.groupBy(col("idx").alias("idx_ref")) \
+    .agg(collect_list(struct("watch_next_idx", "url","title")).alias("watch_next"))
 watch_next_dataset_agg.printSchema()
-watch_next_dataset_agg.show(truncate=False)
 
 tedx_dataset_agg = tedx_dataset.join(tags_dataset_agg, tedx_dataset.idx == tags_dataset_agg.idx_ref, "left") \
     .drop("idx_ref")
